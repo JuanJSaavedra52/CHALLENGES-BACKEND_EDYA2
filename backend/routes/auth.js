@@ -7,11 +7,19 @@ const { validarCampos } = require('../middlewares/validar-campos')
 router.post('/register',
     [
         check('email', 'El email es obligatorio').isEmail(),
-        check('password').isLength({ min: 6 })
+        check('password').isLength({ min: 6 }),
+        validarCampos
     ],
     registrarUsuario)
-    
-router.post('/', loginUsuario)
+
+router.post('/',
+    [
+        check('email', 'El email es obligatorio').isEmail(),
+        check('password').isLength({ min: 6 }),
+        validarCampos
+    ],
+    loginUsuario)
+
 router.post(
     '/new',
     [
@@ -21,6 +29,7 @@ router.post(
         validarCampos
     ],
     crearUsuario)
+
 router.get('/renew', revalidarToken)
 
 module.exports = router;
