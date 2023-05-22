@@ -1,4 +1,6 @@
 const express = require('express');
+
+//Tuve que instalar "npm i body-parser" porque no me funcionaba el thunder client
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
