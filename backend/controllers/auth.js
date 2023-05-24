@@ -1,5 +1,6 @@
 const express = require('express');
 const { validationResult } = require('express-validator');
+const Usuario = require('../models/Usuario');
 
 const usuariosCreados = [];
 const usuariosRegistrados = [];
@@ -29,15 +30,30 @@ const registrarUsuario = (req, res = express.request) => {
     usuariosRegistrados.push({email, password});
 };
 
-const crearUsuario = (req, res = express.request) => {
+const crearUsuario = async (req, res = express.request) => {
     const { name, email, password } = req.body;
+    try{
+        const usuario = new Usuario(req.body);
+        await usuario.save();
 
-    usuariosCreados.push({email, password});
+        res.status(200).json({
+            ok: true,
+            usuario,
+        })
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({
+            ok:false,
+            error,
+        })
+    }
 
-    res.status(200).json({
+    //usuariosCreados.push({email, password});
+
+    /*res.status(200).json({
         ok: true,
         name, email, password
-    })
+    })*/
 }
 
 const loginUsuario = (req, res = express.request) => {

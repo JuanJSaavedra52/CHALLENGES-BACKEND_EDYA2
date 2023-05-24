@@ -1,11 +1,13 @@
 const express = require('express');
-
 //Tuve que instalar "npm i body-parser" porque no me funcionaba el thunder client
 const bodyParser = require('body-parser');
 require('dotenv').config();
-
+const {dbConnection} = require('./database/config')
 //Crear Expres App
 const app = express();
+
+//Base Datos
+dbConnection();
 
 // Configurar body-parser
 app.use(bodyParser.json());
