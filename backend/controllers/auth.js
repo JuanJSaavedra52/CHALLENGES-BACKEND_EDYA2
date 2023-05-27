@@ -1,11 +1,7 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
 const Usuario = require('../models/Usuario');
-
-const usuariosCreados = [];
-const usuariosRegistrados = [];
-
-console.log(usuariosCreados);
+const { generarJWT } = require('../helpers/jwt');
 
 const registrarUsuario = (req, res = express.request) => {
     const {email, password} = req.body;
@@ -33,7 +29,18 @@ const registrarUsuario = (req, res = express.request) => {
 const crearUsuario = async (req, res = express.request) => {
     const { name, email, password } = req.body;
     try{
-        const usuario = new Usuario(req.body);
+        
+        let usuario = await Usuario.findOne({email : email})
+        if (usuario) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario con ese correo ya existe',
+            })
+        }
+
+        usuario = new Usuario(req.body);
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync(password, salt);
         await usuario.save();
 
         res.status(200).json({
@@ -47,45 +54,54 @@ const crearUsuario = async (req, res = express.request) => {
             error,
         })
     }
-
-    //usuariosCreados.push({email, password});
-
-    /*res.status(200).json({
-        ok: true,
-        name, email, password
-    })*/
 }
 
-const loginUsuario = (req, res = express.request) => {
+const loginUsuario = async(req, res = express.request) => {
     const {email, password} = req.body;
 
-    const usuarioEsta = usuariosRegistrados.find(
-        (usuario) => usuario.email === email && usuario.password === password
-      );
+    try{
+        let usuario = await Usuario.findOne({email: email})
+        if ( !usuario ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario NO existe',
+            })
+        }
 
-    if (usuarioEsta) {
-        res.json({
+        const passwordValid = bcrypt.compareSync(password, usuario.password);
+        if(!passwordValid) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El password NO es valido',
+            })
+        }
+
+        const token = await(generarJWT(usuario.id, usuario.name))
+
+        res.status(200).json({
             ok: true,
-            message: 'Usuario logueado exitosamente',
-            email,
-            password,
-        });
-    } else {
-        res.status(400).json({
+            usuario,
+            token
+        })
+
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({
             ok: false,
-            message: 'Email y/o contraseña incorrectos'
+            error,
         })
     }
 
-    res.json({
-        ok: true,
-        email, password
-    })
 }
 
-const revalidarToken = (req, res = express.request) => {
+const revalidarToken = async (req, res = express.request) => {
+    const {uid, name} = req
+
+    const token = await(generarJWT(uid, name))
+
     res.json({
-        ok: true
+        ok: true,
+        token
     })
 }
 
