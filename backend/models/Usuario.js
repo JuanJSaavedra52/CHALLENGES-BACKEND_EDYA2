@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const UsuarioSchema = Schema({
+const UsuarioScheme = Schema({
     name: {
         type: String,
         require: true
@@ -31,4 +31,4 @@ UsuarioScheme.virtual('tareas', {
 })
 
 
-module.exports = model('Usuario', UsuarioSchema);
+module.exports = model('Usuario', UsuarioScheme);
