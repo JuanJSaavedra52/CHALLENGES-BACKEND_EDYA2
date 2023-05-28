@@ -30,3 +30,18 @@ const listarTasks = async (req, res = express.request) => {
         })
     }
 }
+
+const actualizarTask =async (req, res = express.request) => {
+
+}
+
+const eliminarTask =async (req, res = express.request) => {
+    
+}
+
+module.exports = {
+    crearTask,
+    listarTasks,
+    actualizarTask,
+    eliminarTask
+}
