@@ -1,5 +1,6 @@
-const {response} = require('express');
+/*const {response} = require('express');
 const jwt = require('jsonwebtoken');
+const { generarJWT } = require('../helpers/jwt');
 
 const validarJWT = (req, res = response, next) => {
 
@@ -31,3 +32,4 @@ const validarJWT = (req, res = response, next) => {
 module.exports = {
     validarJWT
 }
+*/

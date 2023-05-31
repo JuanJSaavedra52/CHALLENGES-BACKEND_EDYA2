@@ -1,3 +1,4 @@
+/*const express = require('express');
 const jwt = require('jsonwebtoken');
 
 const generarJWT = (uid, name) => {
@@ -18,3 +19,4 @@ const generarJWT = (uid, name) => {
 }
 
 module.exports = { generarJWT }
+*/

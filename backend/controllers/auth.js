@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/Usuario');
-const { generarJWT } = require('../helpers/jwt');
+//const { generarJWT } = require('../helpers/jwt');
 
 const registrarUsuario = (req, res = express.request) => {
     const {email, password} = req.body;
@@ -76,7 +76,7 @@ const loginUsuario = async(req, res = express.request) => {
             })
         }
 
-        const token = await(generarJWT(usuario.id, usuario.name))
+        //const token = await(generarJWT(usuario.id, usuario.name))
 
         res.status(200).json({
             ok: true,
@@ -94,7 +94,7 @@ const loginUsuario = async(req, res = express.request) => {
 
 }
 
-const revalidarToken = async (req, res = express.request) => {
+/*const revalidarToken = async (req, res = express.request) => {
     const {uid, name} = req
 
     const token = await(generarJWT(uid, name))
@@ -103,11 +103,11 @@ const revalidarToken = async (req, res = express.request) => {
         ok: true,
         token
     })
-}
+}*/
 
 module.exports = {
     loginUsuario,
     crearUsuario,
-    revalidarToken,
+    //revalidarToken,
     registrarUsuario
 }
